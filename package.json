@@ -2,12 +2,13 @@
   "name": "@emanueletoffolon/capacitor-navigation-bar-icons-color",
   "version": "1.0.0",
   "description": "A Capacitor plugin to change navigation bar icons color on Android",
-  "main": "dist/plugin.cjs.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "unpkg": "dist/plugin.js",
   "scripts": {
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc && rollup -c rollup.config.js",
     "clean": "rimraf ./dist",
     "watch": "tsc -w",
     "prepublishOnly": "npm run build"
@@ -16,8 +17,11 @@
     "@capacitor/core": "^7.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.2.2",
-    "rimraf": "^5.0.0"
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "rimraf": "^5.0.0",
+    "rollup": "^4.0.0",
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "@capacitor/core": "^7.0.0"
