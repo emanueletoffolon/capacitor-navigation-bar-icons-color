@@ -1,10 +1,10 @@
 package it.enesi.navigationbariconscolor
 
-import android.app.Activity
 import android.os.Build
 import android.util.Log
-import android.view.View
-import android.view.WindowInsetsController
+import android.view.Window
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.getcapacitor.Plugin
 import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
@@ -26,45 +26,26 @@ class NavigationBarIconsColor : Plugin() {
         activity.runOnUiThread {
             Log.d("NavigationBarIconsColor", "SDK Version: ${Build.VERSION.SDK_INT}")
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // Android 11 (API 30) e superiori
-                val window = activity.window
-                val controller = window.insetsController
+            val window: Window = activity.window
+            val windowInsetsController: WindowInsetsControllerCompat =
+                WindowCompat.getInsetsController(window, window.decorView)
 
-                Log.d("NavigationBarIconsColor", "Usando WindowInsetsController")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Android 8.0 (API 26) e superiori
+                Log.d("NavigationBarIconsColor", "Usando WindowInsetsControllerCompat")
 
-                if (color != null && color == "dark") {
-                    Log.d("NavigationBarIconsColor", "Impostazione icone scure (API 30+)")
-                    controller?.setSystemBarsAppearance(
-                        0,
-                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
-                    )
-                } else {
-                    Log.d("NavigationBarIconsColor", "Impostazione icone chiare (API 30+)")
-                    controller?.setSystemBarsAppearance(
-                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
-                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
-                    )
-                }
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // Android 8.0 (API 26) fino ad Android 10
-                val window = activity.window
-                val decorView = window.decorView
-                var flags = decorView.systemUiVisibility
+                windowInsetsController.isAppearanceLightNavigationBars =
+                    color != "dark"
 
-                Log.d("NavigationBarIconsColor", "Usando SystemUiVisibility")
-                Log.d("NavigationBarIconsColor", "Flags prima: $flags")
-
-                flags = if (color != null && color == "dark") {
-                    Log.d("NavigationBarIconsColor", "Impostazione icone scure (API 26-29)")
-                    flags and View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
-                } else {
-                    Log.d("NavigationBarIconsColor", "Impostazione icone chiare (API 26-29)")
-                    flags or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-                }
-
-                Log.d("NavigationBarIconsColor", "Flags dopo: $flags")
-                decorView.systemUiVisibility = flags
+                Log.d(
+                    "NavigationBarIconsColor",
+                    "Impostazione icone ${if (color != "dark") "chiare" else "scure"} (API 26+)"
+                )
+            } else {
+                Log.w(
+                    "NavigationBarIconsColor",
+                    "Impossibile impostare il colore delle icone della barra di navigazione su versioni precedenti ad Android 8.0 (API 26)"
+                )
             }
 
             call.resolve()
