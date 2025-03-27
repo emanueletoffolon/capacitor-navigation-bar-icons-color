@@ -39,7 +39,7 @@ class NavigationBarIconsColor : Plugin() {
 
                 Log.d(
                     "NavigationBarIconsColor",
-                    "Impostazione icone ${if (color != "dark") "chiare" else "scure"} (API 26+)"
+                    "Impostazione icone ${if (color != "dark") "scure" else "chiare"} (API 26+)"
                 )
             } else {
                 Log.w(
